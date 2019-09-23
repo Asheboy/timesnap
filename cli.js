@@ -72,6 +72,7 @@ commander
     return str.split(' ');
   })
   .option('--no-headless', 'Chromium/Chrome runs in a window instead of headless mode')
+  .option('--capture-while-selector-exists <selector>', 'Only captures frames where the provided selector exists on the DOM.')
   .parse(process.argv);
 
 commander.url = commander.args[0] || 'index.html';

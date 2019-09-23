@@ -149,7 +149,7 @@ module.exports = function (config) {
         return initializeMediaTimeHandler(page);
       }).then(function () {
         log('Going to ' + url + '...');
-        return page.goto(url, { waitUntil: 'networkidle0' });
+        return page.goto(url, { waitUntil: 'networkidle2' });
       }).then(function () {
         log('Page loaded');
         if ('preparePage' in config) {
@@ -221,34 +221,44 @@ module.exports = function (config) {
 
         var startCaptureTime = new Date().getTime();
         var markerIndex = 0;
+        var firstCapturedFrame = 0;
         return promiseLoop(function () {
           return markerIndex < markers.length;
         }, function () {
           var e = markers[markerIndex];
-          var p;
+          var p = timeHandler.goToTimeAndAnimate(browserFrames, e.time);
           markerIndex++;
           if (e.type === 'Capture') {
-            p = timeHandler.goToTimeAndAnimateForCapture(browserFrames, e.time);
-            // because this section is run often and there is a small performance
-            // penalty of using .then(), we'll limit the use of .then()
-            // to only if there's something to do
-            if (config.preparePageForScreenshot) {
-              p = p.then(function () {
-                log('Preparing page for screenshot...');
-                return config.preparePageForScreenshot(page, e.frameCount, framesToCapture);
-              }).then(function () {
-                log('Page prepared');
-              });
-            }
-            if (capturer.capture) {
-              p = p.then(function () {
-                return capturer.capture(config, e.frameCount, framesToCapture);
-              });
-            }
-          } else if (e.type === 'Only Animate') {
-            p = timeHandler.goToTimeAndAnimate(browserFrames, e.time);
+            return Promise.resolve().then(() => {
+              if (!config.captureWhileSelectorExists) return Promise.resolve(true);
+
+              return page.$(config.captureWhileSelectorExists);
+            }).then(capture => {
+              if (capture) {
+                if (!firstCapturedFrame) firstCapturedFrame = e.frameCount;
+                p = timeHandler.goToTimeAndAnimateForCapture(browserFrames, e.time);
+                // because this section is run often and there is a small performance
+                // penalty of using .then(), we'll limit the use of .then()
+                // to only if there's something to do
+                if (config.preparePageForScreenshot) {
+                  p = p.then(function () {
+                    log('Preparing page for screenshot...');
+                    return config.preparePageForScreenshot(page, e.frameCount, framesToCapture);
+                  }).then(function () {
+                    log('Page prepared');
+                  });
+                }
+                if (capturer.capture) {
+                  p = p.then(function () {
+                    return capturer.capture(config, e.frameCount - firstCapturedFrame + 1, framesToCapture);
+                  });
+                }
+              }
+              return p;
+            });
+          } else {
+            return p;
           }
-          return p;
         }).then(function () {
           log('Elapsed capture time: ' + (new Date().getTime() - startCaptureTime));
           if (capturer.afterCapture) {

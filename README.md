@@ -109,6 +109,15 @@ timesnap https://breathejs.org/examples/Drawing-US-Counties.html \
 ```
 Opens https://breathejs.org/examples/Drawing-US-Counties.html, sets the viewport size to 1920x1080, crops each frame to the bounding box of `#draw-canvas`, records at 60 frames per second for ten virtual seconds, and pipes the output to `ffmpeg`, which reads in the data from stdin, encodes the frames using pixel format `yuv420p`, and saves the result as `video.mp4` in the current working directory. It does not save individual frames to disk. It uses the `--round-to-even-width` and `--round-to-even-height` options to ensure the dimensions of the frames are even numbers, which ffmpeg requires for certain encodings.
 
+
+**<a name="cli-example-capture-while-selector-exists" href="#cli-example-capture-while-selector-exists">#</a> Capturing when only a selector is on the DOM**:
+```
+timesnap "picure.html" \ 
+  --capture-while-selector-exists ".ready" \ 
+  --duration=20 --fps=60
+```
+Opens `picture.html`. Only capturing frames when there is an element matching the selector of `.frame` on the DOM. Captures frames for 20 virtual seconds (independant of whether the selector element is present or not) at 60fps to `frames/0001.png`... in the current working directory. 
+
 ### <a name="cli-options" href="#cli-options">#</a> Command Line *options*
 * <a name="cli-options-output-directory" href="#cli-options-output-directory">#</a> Output Directory: `-o`, `--output-directory` *directory*
     * Saves images to a *directory* (default `./`).
@@ -159,6 +168,8 @@ Opens https://breathejs.org/examples/Drawing-US-Counties.html, sets the viewport
 * <a name="cli-options-no-headless" href="#cli-options-no-headless">#</a> No Headless: `--no-headless`
     * Runs Chromium/Chrome in windowed mode.
 * <a name="cli-options-start-delay" href="#cli-options-start-delay">#</a> Start Delay: `--start-delay` *n seconds*
+    * Waits *n real seconds* after loading the page before starting the virtual timeline.
+* <a name="cli-options-capture-while-selector-exists" href="#cli-options-capture-while-selector-exists">#</a> Capture While Selector Exists: `--capture-while-selector-exists` *selector*
     * Waits *n real seconds* after loading the page before starting the virtual timeline.
 * <a name="cli-options-quiet" href="#cli-options-quiet">#</a> Quiet: `-q`, `--quiet`
     * Suppresses console logging.
@@ -266,6 +277,7 @@ The Node API is structured similarly to the command line options, but there are 
     * <a name="js-config-launch-arguments" href="#js-config-launch-arguments">#</a> `launchArguments` &lt;[Array][] &lt;[string][]&gt;&gt; Extra arguments for Puppeteer/Chromium. Example: `['--single-process']`. A list of arguments can be found [here](https://peter.sh/experiments/chromium-command-line-switches).
     * <a name="js-config-headless" href="#js-config-headless">#</a> `headless` &lt;[boolean][]&gt; Runs puppeteer in headless (nonwindowed) mode (default: `true`).
     * <a name="js-config-start-delay" href="#js-config-start-delay">#</a> `startDelay` &lt;[number][]&gt; Waits `config.startDelay` real seconds after loading before starting (default: `0`).
+    * <a name="js-config-capture-while-selector-exists" href="#js-config-capture-while-selector-exists">#</a> `captureWhileSelectorExists` &lt;[string][]&gt; Captures only when `config.captureWhileSelectorExists` is on the DOM.
     * <a name="js-config-quiet" href="#js-config-quiet">#</a> `quiet` &lt;[boolean][]&gt; Suppresses console logging.
     * <a name="js-config-log-to-std-err" href="#js-config-log-to-std-err">#</a> `logToStdErr` &lt;[boolean][]&gt; Logs to stderr instead of stdout. Doesn't do anything if `config.quiet` is set to true.
     * <a name="js-config-frame-processor" href="#js-config-frame-processor">#</a> `frameProcessor` &lt;[function][]([Buffer][], [number][], [number][])&gt; A function that will be called after capturing each frame. If `config.outputDirectory` and `config.outputPattern` aren't specified, enabling this suppresses automatic file output. After capturing each frame, `config.frameProcessor` is called with three arguments, and if it returns a promise, capture will be paused until the promise resolves:
