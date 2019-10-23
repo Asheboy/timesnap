@@ -106,6 +106,10 @@ module.exports = function (config) {
 
   return puppeteer.launch(launchOptions).then(function (browser) {
     return browser.newPage().then(function (page) {
+      page.on('error', e => {
+        throw e;
+      });
+
       config = Object.assign({
         log,
         outputPath,
