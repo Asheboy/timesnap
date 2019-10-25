@@ -273,8 +273,8 @@ module.exports = function (config) {
     }).then(function () {
       return browser.close();
     }).catch(function (err) {
-      log(err);
-      return browser.close();
+      browser.close();
+      throw err;
     });
   });
 };
