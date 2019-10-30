@@ -270,10 +270,9 @@ module.exports = function (config) {
           }
         });
       });
-    }).then(function () {
+    }).finally(function () {
       return browser.close();
     }).catch(function (err) {
-      browser.close();
       throw err;
     });
   });
