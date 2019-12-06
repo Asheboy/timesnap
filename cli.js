@@ -47,7 +47,7 @@ commander
   .option('-S, --selector <selector>', 'CSS Selector of item to capture')
   .option('--output-stdout', 'Output images to stdout')
   .option('-V, --viewport <dimensions>', 'Viewport dimensions, in pixels (e.g. 800,600)', function (str) {
-    var dims = str.split(',').map(function (d) { return parseInt(d); });
+    let dims = str.split(',').map(function (d) { return parseInt(d); });
     return dims.length > 1 ? { width: dims[0], height: dims[1] } : { width: dims[0] };
   })
   .option('--transparent-background', 'Allow transparent backgrounds (for pngs)')
@@ -77,7 +77,7 @@ commander
 
 commander.url = commander.args[0] || 'index.html';
 
-var processor;
+let processor;
 if (commander.outputStdout) {
   process.stdout.on('error', function (err) {
     if (!commander.quiet) {
@@ -91,7 +91,7 @@ if (commander.outputStdout) {
   };
 }
 
-var config = Object.assign({}, commander, {
+let config = Object.assign({}, commander, {
   logToStdErr: commander.outputStdout ? true : false,
   frameProcessor: processor
 });
