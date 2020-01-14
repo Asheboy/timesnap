@@ -167,6 +167,10 @@ Opens `picture.html`. Only capturing frames when there is an element matching th
     * Arguments to pass to Puppeteer/Chromium, enclosed in quotes. Example: `--launch-arguments="--single-process"`. A list of arguments can be found [here](https://peter.sh/experiments/chromium-command-line-switches).
 * <a name="cli-options-no-headless" href="#cli-options-no-headless">#</a> No Headless: `--no-headless`
     * Runs Chromium/Chrome in windowed mode.
+* <a name="cli-options-screenshot-type" href="#cli-options-screenshot-type">#</a> Screenshot Type: `--screenshot-type` *type*
+    * Output image format for the screenshots. Puppeteer currently supports 'png' (default) and 'jpeg'.
+* <a name="cli-options-screenshot-quality" href="#cli-options-screenshot-quality">#</a> Screenshot Quality: `--screenshot-quality` *number*
+    * 1-100 Quality level to be used when screenshot type is 'jpeg'. Currently, puppeteer defaults this to '80'.
 * <a name="cli-options-start-delay" href="#cli-options-start-delay">#</a> Start Delay: `--start-delay` *n seconds*
     * Waits *n real seconds* after loading the page before starting the virtual timeline.
 * <a name="cli-options-capture-while-selector-exists" href="#cli-options-capture-while-selector-exists">#</a> Capture While Selector Exists: `--capture-while-selector-exists` *selector*

@@ -73,6 +73,8 @@ commander
   })
   .option('--no-headless', 'Chromium/Chrome runs in a window instead of headless mode')
   .option('--capture-while-selector-exists <selector>', 'Only captures frames where the provided selector exists on the DOM.')
+  .option('--screenshot-type <type>', 'Output image format for the screenshots, currently either png or jpeg')
+  .option('--screenshot-quality <level>', 'The quality level to use when screenshot type is jpeg', i => parseInt(i))
   .parse(process.argv);
 
 commander.url = commander.args[0] || 'index.html';
