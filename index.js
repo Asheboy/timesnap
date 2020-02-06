@@ -230,7 +230,7 @@ module.exports = function (config) {
           return markerIndex < markers.length;
         }, function () {
           var e = markers[markerIndex];
-          var p = timeHandler.goToTimeAndAnimate(browserFrames, e.time);
+          var p = new Promise().resolve();
           markerIndex++;
           if (e.type === 'Capture') {
             return Promise.resolve().then(() => {
