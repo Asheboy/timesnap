@@ -150,18 +150,18 @@ module.exports = async config => {
           /^immediate:?/,
           ''
         )
-        ;({ timeHandler, capturer } = require('./lib/immediate-canvas-handler')(
+        ;({ timeHandler, capturer } = immediateCanvasHandler(
           config
         ))
         log('Capture Mode: Immediate Canvas')
       } else {
-        timeHandler = require('./lib/overwrite-time')
-        capturer = require('./lib/capture-canvas')(config)
+        timeHandler = overwriteTime
+        capturer = captureCanvas(config)
         log('Capture Mode: Canvas')
       }
     } else {
-      timeHandler = require('./lib/overwrite-time')
-      capturer = require('./lib/capture-screenshot')(config)
+      timeHandler = overwriteTime
+      capturer = captureScreenshot(config)
       log('Capture Mode: Screenshot')
     }
     if (config.viewport) {
